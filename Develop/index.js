@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const cTable = require('console.table');
+const prompts = require('./js/prompts')
 require('dotenv').config()
 
 const connection = mysql.createConnection({
@@ -30,7 +31,8 @@ const startSearch = () => {
           'View Department(s)',
           'View Employee(s)',
           'View Role(s)',
-          'Update Employee Role'
+          'Update Employee Role',
+          'Exit'
         ]
       }
     ])
@@ -57,10 +59,64 @@ const startSearch = () => {
         case 'Update Employee Role':
           updateRole();
           break;
+        case 'Exit':
+          console.log('Thank you for using "Employee Tracker" by Kyle Tran! Bye (:')
+          process.exit(0);
 
         default:
           console.log(`Invalid action: ${answer.choices}`);
           break;
       };
     })
+};
+
+const addDepartment = () => {
+  inquirer
+    .prompt(prompts.departmentPrompts)
+    .then((answers) => {
+      const query = 'INSERT INTO departments (name) VALUES (?)';
+      connection.query(query, (answers.name), (err, res) => {
+        if (res) {
+          console.log(`Success! The department, ${answers.name}, has been added to the list!`)
+        }
+        else {
+          console.log(err);
+        }
+        startSearch();
+      });
+    });
+};
+
+const addEmployee = () => {
+  inquirer
+    .prompt(prompts.employeePrompts)
+    .then((answers) => {
+      const query = 'INSERT INTO employees (firstName, lastName, role_id, manager_id) VALUES (?, ?, ?, ?)';
+      connection.query(query, [answers.firstName, answers.lastName, answers.role_id, answers.manager_id], (err, res) => {
+        if (res) {
+          console.log(`Success! The employee, ${answers.firstName} ${answers.lastName}, has been added to the list!`)
+        }
+        else {
+          console.log(err);
+        }
+        startSearch();
+      });
+    });
+};
+
+const addRole = () => {
+  inquirer
+    .prompt(prompts.rolePrompts)
+    .then((answers) => {
+      const query = 'INSERT INTO roles (title, salary, department_id) VALUES (?, ? ,?)';
+      connection.query(query, [answers.title, answers.salary, answers.department_id], (err, res) => {
+        if (res) {
+          console.log(`Success! The role, ${answers.title}, has been added to the list!`)
+        }
+        else {
+          console.log(err);
+        }
+        startSearch();
+      });
+    });
 };
