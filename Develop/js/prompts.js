@@ -69,4 +69,18 @@ const rolePrompts = [
   },
 ];
 
-module.exports = {departmentPrompts, employeePrompts, rolePrompts};
+const updateRolePrompts = [
+  {
+    name: 'prevRole',
+    type: 'input',
+    message: 'What is the name of the role you would like to update? (Case Sensitive)'
+  },
+  {
+    name: 'newRole',
+    type: 'input',
+    message: 'What is the name of the new role?'
+  },
+];
+
+
+module.exports = {departmentPrompts, employeePrompts, rolePrompts, updateRolePrompts};
