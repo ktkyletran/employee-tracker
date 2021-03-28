@@ -31,7 +31,7 @@ const startSearch = () => {
           'View Department(s)',
           'View Employee(s)',
           'View Role(s)',
-          'Update Employee Role',
+          'Update Existing Role',
           'Exit'
         ]
       }
@@ -54,9 +54,9 @@ const startSearch = () => {
           viewEmployee();
           break;
         case 'View Role(s)':
-          viewRole();
+          viewRoles();
           break;
-        case 'Update Employee Role':
+        case 'Update Existing Role':
           updateRole();
           break;
         case 'Exit':
@@ -118,5 +118,71 @@ const addRole = () => {
         }
         startSearch();
       });
+    });
+};
+
+
+const viewDepartment = () => {
+  const query = 'SELECT * FROM departments';
+  connection.query(query, (err, res) => {
+    let departmentsArr = [];
+    if (err) throw err;
+    res.forEach(({ name }) => {
+      departmentsArr.push(`- ${name}\n`);
+    });
+    console.table([
+      {
+        'Department(s)': departmentsArr.join(''),
+      },
+    ])
+    startSearch();
+  });
+};
+
+const viewEmployee = () => {
+  const query = 'SELECT * FROM employees';
+  connection.query(query, (err, res) => {
+    let employeesArr = [];
+    if (err) throw err;
+    res.forEach(({ firstName, lastName }) => {
+      employeesArr.push(`- ${firstName} ${lastName}\n`);
+    });
+    console.table([
+      {
+        'Employee(s)': employeesArr.join(''),
+      },
+    ])
+    startSearch();
+  });
+};
+
+const viewRoles = () => {
+  const query = 'SELECT * FROM roles';
+  connection.query(query, (err, res) => {
+    let rolesArr = [];
+    if (err) throw err;
+    res.forEach(({ title }) => {
+      rolesArr.push(`- ${title}\n`);
+    });
+    console.table([
+      {
+        'Role(s)': rolesArr.join(''),
+      },
+    ])
+    startSearch();
+  });
+};
+
+const updateRole = () => {
+  inquirer
+    .prompt(prompts.updateRolePrompts)
+    .then((answers) => {
+      const query = "UPDATE roles SET title = ? WHERE title = ?";
+      connection.query(query, [answers.newRole, answers.prevRole])
+      console.log(`Success! The role, ${answers.prevRole}, has been updated to ${answers.newRole}!`)
+      startSearch();
+    })
+    .catch((err) => {
+      if (err) throw err;
     });
 };
