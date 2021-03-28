@@ -39,5 +39,3 @@ Run `npm start` in the terminal and choose an of option from the list to start b
   <li><a href="https://github.com/ktkyletran/employee-tracker">GitHub Repo</a></li>
   <li><a href="mailto: ktkyletran@gmail.com">Email me</a></li>
 </ul>
-
-https://drive.google.com/file/d/1flohQIbR3xu9gpzrE1EWkblz3IhWI6yz/view
